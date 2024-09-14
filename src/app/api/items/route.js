@@ -35,7 +35,7 @@ let items = [];
 }*/
 
 export async function POST(req) {
-  const token = req.headers.get("authorization")?.replace("Bearer ", ""); // Hämta JWT-token från headers
+  const token = req.headers.get("authorization")?.replace("Bearer ", "");
   
   console.log("Received token:", token);
 
@@ -62,8 +62,7 @@ export async function POST(req) {
         name,
         description,
         quantity: parseInt(quantity),
-        category,
-        userId: user.userId, 
+        category
       },
     });
 

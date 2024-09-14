@@ -27,10 +27,11 @@ try {
 export async function PUT(req, { params }) {
   const { id } = params;
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
-
+ 
   console.log("Received token:", token);
 
-  const user = await verifyJWT(token);
+    const user = await verifyJWT(token);
+    console.log("Verified user:", user);
 
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -40,6 +41,7 @@ export async function PUT(req, { params }) {
     const { name, description, quantity, category } = await req.json();
 
     if (!name || !description || !quantity || !category) {
+      console.log("Validation error: All fields are required");
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
 
