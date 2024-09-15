@@ -35,7 +35,7 @@ export default function CreateItemPage() {
         name,
         description,
         quantity: parseInt(quantity, 10),
-        category,
+        category
       }); // Logga vad som skickas
 
 

@@ -20,9 +20,16 @@ export default function EditItemPage() {
   // Hämta det item som ska redigeras
   useEffect(() => {
     async function fetchItem() {
+      if (!token) {
+        setError("No token available");
+        return;
+      }
+
+      
       try {
         const response = await fetch(`/api/items/${id}`, {
           headers: {
+            'Content-Type': "application/json",
             Authorization: `Bearer ${token}`, // Skicka JWT-token i anropet för autentisering
           },
         });
@@ -57,6 +64,11 @@ export default function EditItemPage() {
     // Validera att alla fält är ifyllda innan du skickar PUT-begäran
     if (!itemData.name || !itemData.description || !itemData.quantity || !itemData.category) {
       setError("Please fill in all fields");
+      return;
+    }
+
+    if (!token) {
+      setError("Token is missing");
       return;
     }
 

@@ -3,15 +3,38 @@ import { NextResponse } from "next/server";
 import { validateItemData } from "@/utils/helpers/apiHelpers";
 import { verifyJWT } from "@/utils/helpers/authHelpers";
 
+
 const prisma = new PrismaClient();
 
-export async function GET() {
-try {
-    const items = await prisma.item.findMany();
+export async function GET(req) {
+  try {
+  
+  const { searchParams } = new URL(req.url);
+
+const categories = searchParams.getAll('category');
+//const inStock = url.searchParams.get('inStock');
+
+let filter = {};
+
+if (categories.length > 0) {
+  filter.category = {
+    in: categories,
+  };
+}
+
+/*if (inStock !== null) {
+  filter.quantity = inStock === "true" ? { gt: 0 } : { lte: 0 };
+}*/
+  
+
+    const items = await prisma.item.findMany({
+      where: filter,
+    });
+
     return NextResponse.json(items, { status: 200 });
   } catch (error) {
     console.error("Error fetching items:", error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "Internal Server Error items/route.js" }, { status: 500 });
   }
 }
 
@@ -48,7 +71,7 @@ export async function POST(req) {
 
   try {
     const { name, description, quantity, category } = await req.json();
-
+    console.log("Received item data:", { name, description, quantity, category });
     // Validate
     if (!name || !description || !quantity || !category) {
       console.log("Missing fields in request body");
@@ -62,7 +85,7 @@ export async function POST(req) {
         name,
         description,
         quantity: parseInt(quantity),
-        category
+        category,
       },
     });
 

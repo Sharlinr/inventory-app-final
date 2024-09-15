@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function ItemPage({ params }) {
   const { id } = params;
+  const { token } = useAuth();
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,11 +13,12 @@ export default function ItemPage({ params }) {
 
   useEffect(() => {
     async function fetchItem() {
-        const token = localStorage.getItem("token");
+      //const token = localStorage.getItem("@library/token");
 
       try {
         const response = await fetch(`/api/items/${id}`, {
             headers: {
+              'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
         });
