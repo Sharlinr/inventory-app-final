@@ -10,20 +10,20 @@ export default function ItemsPage() {
   const [error, setError] = useState(null); 
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  //const [inStock, setInStock] = useState([]);
+  const [inStock, setInStock] = useState([""]);
   const { token, logout } = useAuth();
   const router = useRouter();
-
 
   useEffect(() => {
     async function fetchItems() {
       try {
-
         const categoryQuery = selectedCategories.length ? `category=${selectedCategories.join(",")}` : "";
-        //const inStockQuery = inStock ? `inStock=${inStock}` : "";
-        const queryString = categoryQuery ? `?${categoryQuery}` : "";
+        const inStockQuery = inStock ? `inStock=${inStock}` : "";
+        //const queryString = categoryQuery ? `?${categoryQuery}` : "";
+        const queryString = [categoryQuery, inStockQuery].filter(Boolean).join("&");
 
-        const response = await fetch(`/api/items${queryString}`);
+        //const response = await fetch(`/api/items${queryString}`);
+        const response = await fetch(`/api/items${queryString ? `?${queryString}` : ""}`);
 
         if (response.ok) {
           const data = await response.json();
@@ -45,11 +45,10 @@ export default function ItemsPage() {
       } finally {
         setLoading(false); 
       }
-
-      }
+    }
         
     fetchItems();
-    }, [selectedCategories]);
+    }, [selectedCategories, inStock]);
 
     function handleCategoryChange(category) {
       setSelectedCategories((prev) =>
@@ -57,6 +56,10 @@ export default function ItemsPage() {
           ? prev.filter((cat) => cat !== category)
           : [...prev, category]
       );
+    }
+
+    function handleInStockChange(value) {
+      setInStock(value);
     }
 
     function handleLogout() {
@@ -94,11 +97,6 @@ export default function ItemsPage() {
     function handleCreate() {
       router.push("/items/create");
     }
-
-    //IN-STOCK FILTERING
-    /*function handleInStockChange(value) {
-      setInStock(value);
-    }*/
     
     if (loading) {
       return <p>Loading...</p>; 
@@ -138,7 +136,7 @@ export default function ItemsPage() {
         </div>
 
         
-        {/*<div>
+        <div>
           <h3>In Stock:</h3>
           <button
             onClick={() => handleInStockChange("true")}
@@ -158,7 +156,7 @@ export default function ItemsPage() {
           >
             All
           </button>
-        </div>*/}
+        </div>
       </div>
 
         <button

@@ -1,12 +1,12 @@
 import * as jose from "jose";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "SECRET"; // should be a env variable
+const JWT_SECRET = process.env.JWT_SECRET || "your-default-secret"; // should be a env variable
 
-const JWT_AUTH_EXP = "1y"
+const JWT_AUTH_EXP = process.env.JWT_AUTH_EXP || "1y";
 
 function encodedSecret() {
-    return new TextEncoder().encode(JWT_SECRET)
+    return new TextEncoder().encode(JWT_SECRET);
 }
 
 export async function signJWT(payload) {
@@ -17,7 +17,7 @@ export async function signJWT(payload) {
     .setExpirationTime(JWT_AUTH_EXP)
     .sign(encodedSecret())
     
-    return token
+    return token;
 }
 
 // Verify JWT-token

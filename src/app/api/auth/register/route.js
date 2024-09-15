@@ -30,7 +30,9 @@ export async function POST(req) {
         },
     });
 
-    const token = await signJWT({ userId: newUser.id }); 
+    //const token = await signJWT({ userId: newUser.id });
+    //const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" }); 
+    const token = await signJWT({ userId: newUser.id });
 
     return NextResponse.json(
         { 

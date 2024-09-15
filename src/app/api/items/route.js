@@ -7,24 +7,22 @@ const prisma = new PrismaClient();
 
 export async function GET(req) {
   try {
-  
-  const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.url);
+    //const categories = searchParams.getAll('category');
+    const categories = searchParams.get('category')?.split(",") || [];
+    const inStock = searchParams.get('inStock');
 
-const categories = searchParams.getAll('category');
-//const inStock = url.searchParams.get('inStock');
+    let filter = {};
 
-let filter = {};
+  if (categories.length > 0) {
+    filter.category = {
+      in: categories,
+    };
+  }
 
-if (categories.length > 0) {
-  filter.category = {
-    in: categories,
-  };
-}
-
-/*if (inStock !== null) {
+  if (inStock !== null) {
   filter.quantity = inStock === "true" ? { gt: 0 } : { lte: 0 };
-}*/
-  
+  }
 
     const items = await prisma.item.findMany({
       where: filter,
