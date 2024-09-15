@@ -6,7 +6,7 @@ import { useAuth } from "@/context/auth";
 export default function CreateItemPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState();
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function CreateItemPage() {
     e.preventDefault();
     setError("");
 
-    if (!name || !description || !category || quantity <= 0) {
+    if (!name || !description || !category || quantity === null || quantity === undefined ) {
       setError("Please fill in all fields and ensure quantity is greater than 0");
       return;
     }

@@ -51,7 +51,7 @@ export async function POST(req) {
     const { name, description, quantity, category } = await req.json();
     console.log("Received item data:", { name, description, quantity, category });
     // Validate
-    if (!name || !description || !quantity || !category) {
+    if (!name || !description || quantity === undefined || !category) {
       console.log("Missing fields in request body");
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }

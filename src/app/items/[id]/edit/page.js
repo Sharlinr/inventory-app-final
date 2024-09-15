@@ -11,7 +11,7 @@ export default function EditItemPage() {
   const [itemData, setItemData] = useState({
     name: "",
     description: "",
-    quantity: 0,
+    quantity: "",
     category: "",
   });
   const [loading, setLoading] = useState(true);
@@ -60,7 +60,7 @@ export default function EditItemPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!itemData.name || !itemData.description || !itemData.quantity || !itemData.category) {
+    if (!itemData.name || !itemData.description || itemData.quantity === "" || !itemData.category) {
       setError("Please fill in all fields");
       return;
     }
