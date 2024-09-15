@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { verifyJWT } from "@/utils/helpers/authHelpers";
 import { NextResponse } from "next/server";
+import { validateItemData, handleError } from "@/utils/helpers/apiHelpers";
 
 const prisma = new PrismaClient();
 
@@ -40,9 +41,10 @@ export async function PUT(req, { params }) {
   try {
     const { name, description, quantity, category } = await req.json();
 
-    if (!name || !description || !quantity || !category) {
-      console.log("Validation error: All fields are required");
-      return NextResponse.json({ message: "All fields are required" }, { status: 400 });
+    const validation = validateItemData({ name, description, quantity, category });
+    if (!validation.valid) {
+      console.log("Validation error:", validation.message);
+      return NextResponse.json({ message: validation.message }, { status: 400 });
     }
 
     const updatedItem = await prisma.item.update({
@@ -52,8 +54,8 @@ export async function PUT(req, { params }) {
 
     return NextResponse.json(updatedItem, { status: 200 });
   } catch (error) {
-    console.error("Error updating item:", error);
-    return NextResponse.json({ message: "Failed to update item" }, { status: 500 });
+    const handledError = handleError(error);
+    return NextResponse.json(handledError, { status: 500 });
   }
 }
 
@@ -74,8 +76,8 @@ export async function DELETE(req, { params }) {
     });
     return NextResponse.json({ message: "Item deleted successfully" }, { status: 200 });
   } catch (error) {
-    console.error("Error deleting item:", error);
-    return NextResponse.json({ message: "Failed to delete item" }, { status: 500 });
+    const handledError = handleError(error);
+    return NextResponse.json(handledError, { status: 500 });
   }
 }
 

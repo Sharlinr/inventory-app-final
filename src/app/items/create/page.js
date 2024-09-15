@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
+import { validateItemData } from "@/utils/helpers/apiHelpers";
 
 export default function CreateItemPage() {
   const [name, setName] = useState("");
@@ -16,8 +17,16 @@ export default function CreateItemPage() {
     e.preventDefault();
     setError("");
 
-    if (!name || !description || !category || quantity === null || quantity === undefined ) {
-      setError("Please fill in all fields and ensure quantity is greater than 0");
+      const itemData = {
+        name,
+        description,
+        quantity,
+        category,
+      };
+
+      const validation = validateItemData(itemData);
+      if (!validation.valid) {
+      setError(validation.message);
       return;
     }
 
@@ -29,7 +38,6 @@ export default function CreateItemPage() {
     }
 
     try {
-
       console.log("Sending POST request with data:", {
         name,
         description,
@@ -58,9 +66,7 @@ export default function CreateItemPage() {
       router.push("/items");
     } else {
       const errorData = await response.json();
-
       console.error("Error from server:", errorData); 
-
       setError(errorData.message || "Failed to create item");
     }
   } catch (err) {

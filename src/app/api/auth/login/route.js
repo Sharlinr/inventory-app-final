@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { signJWT } from "@/utils/helpers/authHelpers";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +21,7 @@ export async function POST(req) {
     return NextResponse.json({ message: 'Invalid credentials for password' }, { status: 401 });
   }
 
-  // Skapa JWT-token
+  // Create JWT-token
   //const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
   const token = await signJWT({ userId: user.id });
   

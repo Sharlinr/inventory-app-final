@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/auth";
+import { validateItemData } from "@/utils/helpers/apiHelpers";
 
 export default function EditItemPage() {
   const { token } = useAuth(); 
@@ -23,12 +24,11 @@ export default function EditItemPage() {
         setError("No token available");
         return;
       }
-
       
       try {
         const response = await fetch(`/api/items/${id}`, {
           headers: {
-            'Content-Type': "application/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, 
           },
         });
@@ -60,13 +60,14 @@ export default function EditItemPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!itemData.name || !itemData.description || itemData.quantity === "" || !itemData.category) {
-      setError("Please fill in all fields");
+    const validation = validateItemData(itemData);
+    if (!validation.valid) {
+      setError(validation.message);
       return;
     }
 
     if (!token) {
-      setError("Token is missing");
+      setError("Token missing");
       return;
     }
 

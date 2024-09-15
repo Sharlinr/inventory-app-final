@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { validateItemData } from "@/utils/helpers/apiHelpers";
+import { validateItemData, handleError } from "@/utils/helpers/apiHelpers";
 import { verifyJWT } from "@/utils/helpers/authHelpers";
 
 const prisma = new PrismaClient();
@@ -30,8 +30,8 @@ export async function GET(req) {
 
     return NextResponse.json(items, { status: 200 });
   } catch (error) {
-    console.error("Error fetching items:", error);
-    return NextResponse.json({ message: "Internal Server Error items/route.js" }, { status: 500 });
+    const handledError = handleError(error);
+    return NextResponse.json(handledError, { status: 500 });
   }
 }
 
@@ -51,10 +51,17 @@ export async function POST(req) {
     const { name, description, quantity, category } = await req.json();
     console.log("Received item data:", { name, description, quantity, category });
     // Validate
-    if (!name || !description || quantity === undefined || !category) {
+    /*if (!name || !description || quantity === undefined || !category) {
       console.log("Missing fields in request body");
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
-    }
+    }*/
+
+      const validation = validateItemData({ name, description, quantity, category});
+
+      if (!validation.valid) {
+        console.log(validation.message);  
+        return NextResponse.json({ message: validation.message }, { status: 400 });  
+      }
 
     console.log("Creating new item with data:", { name, description, quantity, category });
 
@@ -71,7 +78,7 @@ export async function POST(req) {
 
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {
-    console.error("Error creating item:", error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    const handledError = handleError(error);
+    return NextResponse.json(handledError, { status: 500 });
   }
 }

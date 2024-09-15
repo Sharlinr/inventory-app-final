@@ -1,5 +1,4 @@
 import * as jose from "jose";
-import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-default-secret"; // should be a env variable
 

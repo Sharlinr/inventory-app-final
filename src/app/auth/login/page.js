@@ -1,5 +1,3 @@
-// app/login/page.js
-
 "use client"; 
 import { useState } from "react";
 import { useRouter } from "next/navigation"; 
@@ -8,8 +6,7 @@ import { useAuth } from "@/context/auth";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState();
-  //const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(); 
   const router = useRouter(); 
   const { setToken } = useAuth();
 
