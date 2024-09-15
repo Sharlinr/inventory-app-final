@@ -4,9 +4,9 @@ import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/auth";
 
 export default function EditItemPage() {
-  const { token } = useAuth(); // Hämta token från Auth Context
+  const { token } = useAuth(); 
   const router = useRouter();
-  const { id } = useParams(); // Hämta ID från URL:en
+  const { id } = useParams(); 
 
   const [itemData, setItemData] = useState({
     name: "",
@@ -17,7 +17,6 @@ export default function EditItemPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Hämta det item som ska redigeras
   useEffect(() => {
     async function fetchItem() {
       if (!token) {
@@ -30,7 +29,7 @@ export default function EditItemPage() {
         const response = await fetch(`/api/items/${id}`, {
           headers: {
             'Content-Type': "application/json",
-            Authorization: `Bearer ${token}`, // Skicka JWT-token i anropet för autentisering
+            Authorization: `Bearer ${token}`, 
           },
         });
 
@@ -39,16 +38,16 @@ export default function EditItemPage() {
           throw new Error(errorData.message || "Failed to fetch item");
         }
 
-        const data = await response.json(); // Parsar JSON-svaret
-        setItemData(data); // Uppdatera state med itemets data
-        setLoading(false); // Laddning är klar
+        const data = await response.json(); 
+        setItemData(data); 
+        setLoading(false); 
       } catch (err) {
         setError(err.message);
         setLoading(false);
       }
     }
 
-    fetchItem(); // Kör funktionen för att hämta item när sidan laddas
+    fetchItem();
   }, [id, token]);
 
   const handleChange = (e) => {
@@ -61,7 +60,6 @@ export default function EditItemPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validera att alla fält är ifyllda innan du skickar PUT-begäran
     if (!itemData.name || !itemData.description || !itemData.quantity || !itemData.category) {
       setError("Please fill in all fields");
       return;
@@ -72,8 +70,8 @@ export default function EditItemPage() {
       return;
     }
 
-    console.log("Token:", token); // Kontrollera att token finns
-    console.log("Sending PUT request with data:", itemData); // Kontrollera vad som skickas
+    console.log("Token:", token); 
+    console.log("Sending PUT request with data:", itemData); 
 
     try {
       const response = await fetch(`/api/items/${id}`, {

@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     if (response.ok) {
       const data = await response.json();
-      setToken(data.token); // Spara token i context
+      setToken(data.token); 
       router.push("/items");
     } else {
       const data = await response.json();

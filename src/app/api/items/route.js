@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { validateItemData } from "@/utils/helpers/apiHelpers";
 import { verifyJWT } from "@/utils/helpers/authHelpers";
 
-
 const prisma = new PrismaClient();
 
 export async function GET(req) {
@@ -37,25 +36,6 @@ if (categories.length > 0) {
     return NextResponse.json({ message: "Internal Server Error items/route.js" }, { status: 500 });
   }
 }
-
-/*const url = new URL(req.url);
-const search = url.searchParams.get("search");
-let items = [];
-  if (search) {
-    items = await prisma.item.findMany({
-        where: {
-            id: {
-                contains: search,
-                mode: 'insensitive',
-            }
-        }
-    })
-  } else {
-    items = await prisma.item.findMany();
-  }
-
-  return NextResponse.json(items);
-}*/
 
 export async function POST(req) {
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
@@ -97,4 +77,3 @@ export async function POST(req) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
-

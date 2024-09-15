@@ -13,7 +13,6 @@ export default function ItemPage({ params }) {
 
   useEffect(() => {
     async function fetchItem() {
-      //const token = localStorage.getItem("@library/token");
 
       try {
         const response = await fetch(`/api/items/${id}`, {

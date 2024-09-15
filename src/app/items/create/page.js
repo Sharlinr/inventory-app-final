@@ -23,7 +23,6 @@ export default function CreateItemPage() {
 
     console.log("Token:", token);
 
-    // Kolla om token finns, annars visa fel
     if (!token) {
       setError("You must be logged in to create an item");
       return;
@@ -36,16 +35,16 @@ export default function CreateItemPage() {
         description,
         quantity: parseInt(quantity, 10),
         category
-      }); // Logga vad som skickas
+      }); 
 
 
-    const response = await fetch("/api/items", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
+      const response = await fetch("/api/items", {
+        method: "POST",
+          headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
         name,
         description,
         quantity: parseInt(quantity, 10),
@@ -53,14 +52,14 @@ export default function CreateItemPage() {
       }),
     });
 
-    console.log("Response from server:", response); // Logga svaret från servern
+    console.log("Response from server:", response); 
 
     if (response.ok) {
       router.push("/items");
     } else {
       const errorData = await response.json();
 
-      console.error("Error from server:", errorData); // Logga fel från servern
+      console.error("Error from server:", errorData); 
 
       setError(errorData.message || "Failed to create item");
     }
@@ -107,61 +106,3 @@ export default function CreateItemPage() {
     </form>
   );
 }
-
-
-/*"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/auth";
-
-export default function CreateItemPage() {
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [quantity, setQuantity] = useState(0);
-    const [category, setCategory] = useState("");
-    const [error, setError] = useState("");
-    const { token } = useAuth();
-    const router = useRouter();
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setError("");
-
-        const response = await fetch("/api/items", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                name,
-                description,
-                quantity: parseInt(quantity, 10),
-                category
-            }),
-        });
-
-        
-        if (response.ok) {
-          router.push("/items"); 
-        } else {
-          const data = await response.json();
-          setError(data.message || "Failed to create item");
-        }
-      }
-    
-      return (
-        <div>
-          <h1>Create New Item</h1>
-          <form onSubmit={handleCreate}>
-            <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-            <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-            <input type="number" placeholder="Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-            <input type="text" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
-            {error && <p>{error}</p>}
-            <button type="submit">Create Item</button>
-          </form>
-        </div>
-      );
-    }
-*/

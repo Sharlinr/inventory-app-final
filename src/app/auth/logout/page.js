@@ -6,10 +6,8 @@ export default function LogoutPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Remove token from localStorage
     localStorage.removeItem("token");
 
-    // Redirect
     router.push("/login");
   }, [router]);
 

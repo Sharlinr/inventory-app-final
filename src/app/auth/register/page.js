@@ -25,7 +25,7 @@ export default function RegisterPage() {
     if (response.ok) {
       const data = await response.json();
       auth.setToken(data.token);
-      router.push("/items"); // Redirect to items page after registration
+      router.push("/items"); 
     } else {
       const errorData = await response.json();
       setError(errorData.message || "Registration failed");
